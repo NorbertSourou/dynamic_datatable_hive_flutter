@@ -1,0 +1,25 @@
+name: bernard_app
+version: 1.0.0+1
+publish_to: none
+description: A new Flutter project.
+environment: 
+  sdk: '>=2.19.3 <3.0.0'
+
+dependencies: 
+  cupertino_icons: ^1.0.2
+  hive:
+  hive_flutter:
+  pluto_grid:
+  get: 4.6.5
+  progress_dialog_null_safe:
+  flutter: 
+    sdk: flutter
+
+dev_dependencies: 
+  flutter_lints: ^2.0.0
+  flutter_test: 
+    sdk: flutter
+
+flutter: 
+  uses-material-design: true
+
