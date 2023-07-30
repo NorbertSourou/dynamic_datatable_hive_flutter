@@ -61,5 +61,10 @@ class Nav {
       page: () => const EditProductScreen(),
       binding: EditProductControllerBinding(),
     ),
+    GetPage(
+      name: Routes.EDIT_NOTES,
+      page: () => const EditNotesScreen(),
+      binding: EditNotesControllerBinding(),
+    ),
   ];
 }

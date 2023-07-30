@@ -36,17 +36,30 @@ class NoteScreen extends GetView<NoteController> {
                 ? const CircularProgressIndicator()
                 : Column(
                     children: [
-                      for (var i in controller.notesBox!.values)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: TextField(
+                          controller: controller.search,
+                          decoration: const InputDecoration(
+                            contentPadding: EdgeInsets.symmetric(
+                                vertical: 10, horizontal: 12),
+                            hintText: 'Rechercher...',
+                            border: OutlineInputBorder(),
+                          ),
+                          onChanged: controller.onSearchTextChanged,
+                        ),
+                      ),
+                      for (var i in controller.filteredItems.value)
                         Card(
                           child: InkWell(
                             onTap: () {
                               Get.toNamed(Routes.DETAILNOTE, arguments: i);
                             },
                             onLongPress: () async {
-                             return Get.dialog(
+                              return Get.dialog(
                                 AlertDialog(
                                   title: const Text(
-                                    "Plus d'ations",
+                                    "Plus d'actions",
                                     style: TextStyle(color: Colors.green),
                                   ),
                                   content: Column(
@@ -54,14 +67,20 @@ class NoteScreen extends GetView<NoteController> {
                                     children: [
                                       ListTile(
                                         title: const Text("Modifier"),
-                                        onTap: null,
+                                        onTap: () async {
+                                          bool result = await Get.toNamed(
+                                              Routes.EDIT_NOTES,
+                                              arguments: i);
+
+                                          if (result) controller.getInit();
+                                        },
                                         minVerticalPadding: 0,
                                         contentPadding: EdgeInsets.zero,
                                         leading: const Icon(Icons.edit),
                                       ),
                                       ListTile(
                                         title: const Text("Supprimer"),
-                                        onTap: () async{
+                                        onTap: () async {
                                           await controller.deleteNote(i['id']);
                                         },
                                         minLeadingWidth: 0,

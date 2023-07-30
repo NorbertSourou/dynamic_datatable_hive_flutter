@@ -10,6 +10,8 @@ class NoteController extends GetxController {
   final isLoading = false.obs;
   Box? notesBox;
   Map<String, String> notes = {};
+  TextEditingController search = TextEditingController();
+  final filteredItems = const Iterable<dynamic>.empty().obs;
 
   @override
   void onInit() {
@@ -21,10 +23,28 @@ class NoteController extends GetxController {
   void getInit() {
     isLoading.value = true;
     notesBox = Boxes.getNotes();
+    filteredItems.value = notesBox!.values;
 
     //columns.clear();
 
     isLoading.value = false;
+  }
+
+  onSearchTextChanged(String text) {
+    if (text.isEmpty) {
+      filteredItems.value = notesBox!.values;
+    } else {
+      filteredItems.value = notesBox!.values.toList().where((item) {
+        return item['titre']
+            .toString()
+            .toLowerCase()
+            .contains(text.toLowerCase());
+      }).toList();
+    }
+
+    if (filteredItems.value.isEmpty) {
+      filteredItems.value = [];
+    }
   }
 
   deleteNote(String id) async {

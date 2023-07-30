@@ -6,9 +6,10 @@ class Routes {
 
   static const ADDNOTE = '/addnote';
   static const DETAILNOTE = '/detailnote';
+  static const EDIT_PRODUCT = '/edit-product';
   static const HOME = '/home';
   static const MANAGE_PRODUCT = '/manage-product';
   static const NOTE = '/note';
   static const PRODUCTS = '/products';
-  static const EDIT_PRODUCT = '/edit-product';
+  static const EDIT_NOTES = '/edit-notes';
 }

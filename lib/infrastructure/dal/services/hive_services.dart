@@ -18,7 +18,9 @@ class HiveService {
   static addNotesToHive(var data) async {
     await notesBox.add(data);
   }
-
+  static editNotesToHive(int index,var data) async {
+    await notesBox.putAt(index,data);
+  }
   static addColumnsToHive(String column) async {
     await columnsBox.add(column);
   }
