@@ -1,14 +1,36 @@
+import 'dart:io';
+
 import 'package:bernard_app/infrastructure/dal/services/hive_services.dart';
 import 'package:flutter/material.dart';
-
+import 'dart:math' as math;
 import 'package:get/get.dart';
 import 'package:progress_dialog_null_safe/progress_dialog_null_safe.dart';
 
+import '../edit_product/edit_product.screen.dart';
 import 'controllers/manage_product.controller.dart';
 
 class ManageProductScreen extends GetView<ManageProductController> {
   ManageProductScreen({Key? key}) : super(key: key);
   final formKey = GlobalKey<FormState>();
+
+  randomIdGenerator() {
+    var ranAssets = RanKeyAssets();
+    String first4alphabets = '';
+    String middle4Digits = '';
+    String last4alphabets = '';
+    for (int i = 0; i < 4; i++) {
+      first4alphabets += ranAssets.smallAlphabets[
+          math.Random.secure().nextInt(ranAssets.smallAlphabets.length)];
+
+      middle4Digits += ranAssets
+          .digits[math.Random.secure().nextInt(ranAssets.digits.length)];
+
+      last4alphabets += ranAssets.smallAlphabets[
+          math.Random.secure().nextInt(ranAssets.smallAlphabets.length)];
+    }
+
+    return '$first4alphabets-$middle4Digits-${DateTime.now().microsecondsSinceEpoch.toString().substring(8, 12)}-$last4alphabets';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -17,15 +39,13 @@ class ManageProductScreen extends GetView<ManageProductController> {
       onWillPop: () async {
         Get.closeAllSnackbars();
 
-        print("hello");
-
         Get.back(result: true);
 
         return true;
       },
       child: Scaffold(
           appBar: AppBar(
-            title: const Text('ManageProductScreen'),
+            title: const Text('Ajouter note'),
             actions: [
               IconButton(
                 onPressed: () {
@@ -74,30 +94,91 @@ class ManageProductScreen extends GetView<ManageProductController> {
                       key: formKey,
                       child: Column(
                         children: [
-                          for (String product
-                              in controller.productsBox.value!.values)
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                          Align(
+                            alignment: Alignment.center,
+                            child: Stack(
                               children: [
-                                Text(product),
-                                const SizedBox(
-                                  height: 5,
-                                ),
-                                TextFormField(
-                                  controller: controller.controllers[product],
-                                  // Access the controller using the variable name
-                                  decoration: const InputDecoration(
-                                    focusedBorder: MyCustomOutlineInputBorder
-                                        .customOutline,
-                                    enabledBorder: MyCustomOutlineInputBorder
-                                        .customOutline,
+                                controller.finalPath.value.isNotEmpty
+                                    ? CircleAvatar(
+                                        backgroundColor: Colors.white60,
+                                        backgroundImage: Image.file(
+                                          File(controller.finalPath.value),
+                                        ).image,
+                                        radius: 80,
+                                      )
+                                    : const CircleAvatar(
+                                        backgroundColor: Colors.greenAccent,
+                                        radius: 80,
+                                      ),
+                                Positioned(
+                                  bottom: 5,
+                                  right: 20,
+                                  child: InkWell(
+                                    onTap: () {
+                                      Get.dialog(
+                                        AlertDialog(
+                                          title: const Text(
+                                            "Choisir une image",
+                                            style:
+                                                TextStyle(color: Colors.green),
+                                          ),
+                                          content: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              ListTile(
+                                                title: const Text("Camera"),
+                                                onTap: controller
+                                                    .pickImageFromCamera,
+                                                minLeadingWidth: 0,
+                                                minVerticalPadding: 0,
+                                                contentPadding: EdgeInsets.zero,
+                                                leading: const Icon(Icons.camera),
+                                              ),
+                                              ListTile(
+                                                title: const Text("Galerie"),
+                                                onTap: controller
+                                                    .pickImageFromGallery,
+                                                minLeadingWidth: 0,
+                                                minVerticalPadding: 0,
+                                                contentPadding: EdgeInsets.zero,
+                                                leading: const Icon(Icons.image),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                    child: const Icon(Icons.camera_alt),
                                   ),
-                                ),
-                                const SizedBox(
-                                  height: 15,
-                                ),
+                                )
                               ],
                             ),
+                          ),
+                          for (String product
+                              in controller.productsBox.value!.values)
+                            if (product != 'Image' && product != 'Id')
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(product),
+                                  const SizedBox(
+                                    height: 5,
+                                  ),
+                                  TextFormField(
+                                    controller: controller.controllers[product],
+                                    // Access the controller using the variable name
+                                    decoration: const InputDecoration(
+                                      focusedBorder: MyCustomOutlineInputBorder
+                                          .customOutline,
+                                      enabledBorder: MyCustomOutlineInputBorder
+                                          .customOutline,
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: 15,
+                                  ),
+                                ],
+                              ),
                           SizedBox(
                             width: double.infinity,
                             child: ElevatedButton(
@@ -108,13 +189,21 @@ class ManageProductScreen extends GetView<ManageProductController> {
                                   if (controller.productsBox.value != null) {
                                     for (String product in controller
                                         .productsBox.value!.values) {
-                                      result[product] =
-                                          controller.controllers[product]!.text;
+                                      if (product == 'Image') {
+                                        result[product] =
+                                            controller.finalPath.value;
+                                      } else if (product == 'Id') {
+                                        result[product] = randomIdGenerator();
+                                      } else {
+                                        result[product] = controller
+                                            .controllers[product]!.text;
+                                      }
                                     }
                                   }
                                   await HiveService.addProductToHive(result);
 
                                   formKey.currentState!.reset();
+                                  controller.finalPath.value = "";
                                   var snackBar = const SnackBar(
                                     backgroundColor: Colors.green,
                                     content: Text(
@@ -173,3 +262,5 @@ class MyCustomOutlineInputBorder {
         BorderSide(style: BorderStyle.none, color: Colors.red, width: 1.3),
   );
 }
+
+

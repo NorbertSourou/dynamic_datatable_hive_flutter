@@ -11,6 +11,10 @@ class HiveService {
     await productsBox.add(data);
   }
 
+  static editProductToHive(int index, var data) async {
+    await productsBox.putAt(index, data);
+  }
+
   static addNotesToHive(var data) async {
     await notesBox.add(data);
   }
@@ -22,6 +26,13 @@ class HiveService {
   static checkIfColumnExist(String column) async {
     return columnsBox.values
         .any((value) => value.toLowerCase() == column.toLowerCase());
+  }
+
+  static deleteProduct(int index) async {
+    return productsBox.deleteAt(index);
+  }
+  static deleteNotes(int index) async {
+    return notesBox.deleteAt(index);
   }
 
 //

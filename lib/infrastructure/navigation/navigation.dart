@@ -38,8 +38,28 @@ class Nav {
     ),
     GetPage(
       name: Routes.MANAGE_PRODUCT,
-      page: () =>  ManageProductScreen(),
+      page: () => ManageProductScreen(),
       binding: ManageProductControllerBinding(),
+    ),
+    GetPage(
+      name: Routes.NOTE,
+      page: () => const NoteScreen(),
+      binding: NoteControllerBinding(),
+    ),
+    GetPage(
+      name: Routes.ADDNOTE,
+      page: () => const AddnoteScreen(),
+      binding: AddnoteControllerBinding(),
+    ),
+    GetPage(
+      name: Routes.DETAILNOTE,
+      page: () => const DetailnoteScreen(),
+      binding: DetailnoteControllerBinding(),
+    ),
+    GetPage(
+      name: Routes.EDIT_PRODUCT,
+      page: () => const EditProductScreen(),
+      binding: EditProductControllerBinding(),
     ),
   ];
 }

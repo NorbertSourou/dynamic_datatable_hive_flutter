@@ -9,10 +9,13 @@ dependencies:
   cupertino_icons: ^1.0.2
   hive:
   hive_flutter:
-  pluto_grid:
   get: 4.6.5
   progress_dialog_null_safe:
-  flutter: 
+  image_picker:
+  path_provider:
+  path:
+  html_editor_enhanced:
+  flutter:
     sdk: flutter
 
 dev_dependencies: 

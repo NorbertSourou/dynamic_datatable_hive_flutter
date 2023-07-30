@@ -7,7 +7,7 @@ class Boxes {
 
   static Box<String> getColumns() {
     final columns = Hive.box<String>("columns");
-    if (columns.isEmpty) columns.addAll(['Image', 'Nom', 'Prix', 'Quantité']);
+    if (columns.isEmpty) columns.addAll(['Id','Image', 'Nom', 'Prix', 'Quantité']);
     return columns;
   }
 }

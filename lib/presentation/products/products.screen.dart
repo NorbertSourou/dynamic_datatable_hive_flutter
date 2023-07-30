@@ -1,8 +1,7 @@
 import 'package:bernard_app/infrastructure/navigation/routes.dart';
 import 'package:flutter/material.dart';
-
+import 'dart:math' as math;
 import 'package:get/get.dart';
-import 'package:pluto_grid/pluto_grid.dart';
 
 import 'controllers/products.controller.dart';
 
@@ -14,45 +13,49 @@ class ProductsScreen extends GetView<ProductsController> {
     final controller = Get.put(ProductsController());
     return Scaffold(
       appBar: AppBar(
-        title: const Text('ProductsScreen'),
-        centerTitle: true,
+        title: const Text('Mon carnet'),
+        leading: IconButton(
+          onPressed: () {
+            Get.back();
+          },
+          icon: const Icon(Icons.arrow_back_ios),
+        ),
       ),
-      body: Obx(
-        () => controller.isLoading.value
-            ? const CircularProgressIndicator()
-            : PlutoGrid(
-                columns: controller.columns,
-                rows: controller.rows,
-                onChanged: (PlutoGridOnChangedEvent event) {
-                  print(event);
-                },
-                onLoaded: (PlutoGridOnLoadedEvent event) {
-                  event.stateManager.setShowColumnFilter(true);
-                },
-                configuration: PlutoGridConfiguration(
-                  columnFilter: PlutoGridColumnFilterConfig(
-                    filters: const [
-                      ...FilterHelper.defaultFilters,
-                      ClassYouImplemented(),
-                    ],
-                    resolveDefaultColumnFilter: (column, resolver) {
-                      if (column.field == 'text') {
-                        return resolver<PlutoFilterTypeContains>()
-                            as PlutoFilterType;
-                      }
-                      return resolver<PlutoFilterTypeContains>()
-                          as PlutoFilterType;
-                    },
+      body: Obx(() => controller.isLoading.value
+          ? const CircularProgressIndicator()
+          : SingleChildScrollView(
+              scrollDirection: Axis.vertical,
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextField(
+                      controller: controller.search,
+                      decoration: const InputDecoration(
+                        contentPadding:
+                            EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+                        hintText: 'Rechercher...',
+                        border: OutlineInputBorder(),
+                      ),
+                      onChanged: controller.onSearchTextChanged,
+                    ),
                   ),
-                ),
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: DataTable(
+                      dataRowHeight: 100,
+                      columns: controller.columnsObx,
+                      rows: controller.rowsObx,
+                    ),
+                  ),
+                ],
               ),
-      ),
+            )),
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.add),
         onPressed: () async {
           final result = await Get.toNamed(Routes.MANAGE_PRODUCT);
           if (result == true) {
-            print(result);
             controller.getInit();
           }
         },
@@ -61,20 +64,3 @@ class ProductsScreen extends GetView<ProductsController> {
   }
 }
 
-class ClassYouImplemented implements PlutoFilterType {
-  @override
-  String get title => 'Custom contains';
-
-  @override
-  get compare => ({
-        required String? base,
-        required String? search,
-        required PlutoColumn? column,
-      }) {
-        var keys = search!.split(',').map((e) => e.toUpperCase()).toList();
-
-        return keys.contains(base!.toUpperCase());
-      };
-
-  const ClassYouImplemented();
-}
