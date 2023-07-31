@@ -3,7 +3,7 @@ import 'package:bernard_app/presentation/manage_product/manage_product.screen.da
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 import 'package:get/get.dart';
-import 'package:html_editor_enhanced/html_editor.dart';
+
 
 import '../edit_product/edit_product.screen.dart';
 import 'controllers/addnote.controller.dart';

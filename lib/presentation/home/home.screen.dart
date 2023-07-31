@@ -10,26 +10,43 @@ class HomeScreen extends GetView<HomeController> {
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.put(HomeController());
     return Scaffold(
       appBar: AppBar(
         title: const Text('Bienvenue'),
+        actions: [
+          PopupMenuButton(
+            onSelected: controller.select,
+            padding: EdgeInsets.zero,
+            // initialValue: choices[_selection],
+            itemBuilder: (BuildContext context) {
+              return controller.options.map((String choice) {
+                return PopupMenuItem<String>(
+                  value: choice,
+                  child: Text(choice),
+                );
+              }).toList();
+            },
+          )
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
         child: Center(
           child: Column(
-
             children: [
-              SizedBox(height: 15,),
-               Card(
+              const SizedBox(
+                height: 15,
+              ),
+              Card(
                 child: ListTile(
                   onTap: () {
                     Get.toNamed(Routes.PRODUCTS);
                   },
                   contentPadding:
-                      EdgeInsets.symmetric(vertical: 7, horizontal: 12),
-                  title: Text("Carnet"),
-                  leading: Icon(Icons.my_library_books_sharp),
+                      const EdgeInsets.symmetric(vertical: 7, horizontal: 12),
+                  title: const Text("Carnet"),
+                  leading: const Icon(Icons.my_library_books_sharp),
                 ),
               ),
               Card(
@@ -43,7 +60,6 @@ class HomeScreen extends GetView<HomeController> {
                   leading: const Icon(Icons.edit_document),
                 ),
               ),
-
             ],
           ),
         ),

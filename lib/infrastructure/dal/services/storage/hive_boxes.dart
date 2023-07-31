@@ -5,9 +5,10 @@ class Boxes {
 
   static Box<dynamic> getNotes() => Hive.box<dynamic>("notes");
 
-  static Box<String> getColumns() {
-    final columns = Hive.box<String>("columns");
+  static Box<dynamic> getColumns() {
+    final columns = Hive.box<dynamic>("columns");
     if (columns.isEmpty) columns.addAll(['Id','Image', 'Nom', 'Prix', 'Quantité']);
     return columns;
+
   }
 }

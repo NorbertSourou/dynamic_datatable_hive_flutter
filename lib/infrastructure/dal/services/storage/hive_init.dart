@@ -6,6 +6,6 @@ class HiveData {
 
     await Hive.openBox<dynamic>("products");
     await Hive.openBox<dynamic>("notes");
-    await Hive.openBox<String>("columns");
+    await Hive.openBox<dynamic>("columns");
   }
 }

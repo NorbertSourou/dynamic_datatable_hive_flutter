@@ -1,6 +1,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="io.bernard.bernard_app">
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
+
    <application
+        android:requestLegacyExternalStorage="true"
         android:label="bernard_app"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">

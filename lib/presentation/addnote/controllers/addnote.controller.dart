@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 
 import 'package:get/get.dart';
-import 'package:html_editor_enhanced/html_editor.dart';
+
 
 class AddnoteController extends GetxController {
   //TODO: Implement AddnoteController
